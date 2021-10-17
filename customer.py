@@ -1,6 +1,6 @@
 from rental import Rental
 from movie import Movie
-import logging
+
 
 class Customer:
     """
@@ -9,6 +9,7 @@ class Customer:
        movies rented for the current billing period,
        and can print a statement of his rentals.
     """
+
     def __init__(self, name: str):
         """ Initialize a new customer."""
         self.name = name
@@ -17,10 +18,10 @@ class Customer:
     def add_rental(self, rental: Rental):
         if rental not in self.rentals:
             self.rentals.append(rental)
-    
+
     def get_name(self):
         return self.name
-    
+
     def statement(self):
         """
             Print all the rentals in current period, 
@@ -28,13 +29,13 @@ class Customer:
             Returns:
                 the statement as a String
         """
-        total_amount = 0 # total charges
-        frequent_renter_points = 0 
+        total_amount = 0  # total charges
+        frequent_renter_points = 0
         statement = f"Rental Report for {self.name}\n\n"
         fmt = "{:32s}    {:4s} {:6s}\n"
         statement += fmt.format("Movie Title", "Days", "Price")
         fmt = "{:32s}   {:4d} {:6.2f}\n"
-        
+
         for rental in self.rentals:
             # compute rental change
             amount = 0
@@ -48,37 +49,10 @@ class Customer:
         # footer: summary of charges
         statement += "\n"
         statement += "{:32s} {:6s} {:6.2f}\n".format(
-                       "Total Charges", "", total_amount)
+            "Total Charges", "", total_amount)
         statement += "Frequent Renter Points earned: {}\n".format(frequent_renter_points)
 
         return statement
-
-    def calculate_renter_point(self, frequent_renter_points, rental):
-        if rental.get_movie().get_price_code() == Movie.NEW_RELEASE:
-            frequent_renter_points += rental.get_days_rented()
-        else:
-            frequent_renter_points += 1
-        return frequent_renter_points
-
-    def calculate_amount(self, amount, rental):
-        if rental.get_movie().get_price_code() == Movie.REGULAR:
-            # Two days for $2, additional days 1.50 each.
-            amount = 2.0
-            if rental.get_days_rented() > 2:
-                amount += 1.5 * (rental.get_days_rented() - 2)
-        elif rental.get_movie().get_price_code() == Movie.CHILDRENS:
-            # Three days for $1.50, additional days 1.50 each.
-            amount = 1.5
-            if rental.get_days_rented() > 3:
-                amount += 1.5 * (rental.get_days_rented() - 3)
-        elif rental.get_movie().get_price_code() == Movie.NEW_RELEASE:
-            # Straight per day charge
-            amount = 3 * rental.get_days_rented()
-        else:
-            log = logging.getLogger()
-            log.error(f"Movie {rental.get_movie()} has unrecognized priceCode {rental.get_movie().get_price_code()}")
-        # award renter points
-        return amount
 
 
 if __name__ == "__main__":
