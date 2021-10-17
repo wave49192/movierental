@@ -38,9 +38,8 @@ class Customer:
 
         for rental in self.rentals:
             # compute rental change
-            amount = 0
-            amount = self.calculate_amount(amount, rental)
-            frequent_renter_points = self.calculate_renter_point(frequent_renter_points, rental)
+            amount = rental.get_price()
+            frequent_renter_points = rental.calculate_renter_point()
             #  add detail line to statement
             statement += fmt.format(rental.get_movie().get_title(), rental.get_days_rented(), amount)
             # and accumulate activity
