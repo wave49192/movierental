@@ -1,5 +1,5 @@
 from enum import Enum
-
+from datetime import datetime
 from movie import Movie
 import logging
 
@@ -35,6 +35,14 @@ class Rental:
     def get_price(self):
         # award renter points
         return self.get_movie().get_price_code().price(self.days_rented)
+
+    def for_movie(self, movie: Movie):
+        current_year = datetime.now().year
+        if current_year == movie.get_year():
+            return PriceCode.new_release
+        if movie.get_genre == "Children":
+            return PriceCode.children
+        return PriceCode.regular
 
 
 class PriceCode(Enum):
